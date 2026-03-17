@@ -1,0 +1,68 @@
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --primary: #00ffcc;
+  --primaryDark: #00ccaa;
+}
+
+.dark {
+  --background: #02050a;
+  --foreground: #f8fafc;
+  --card: #0a0f1a;
+  --border: #1e293b;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.card-bg { 
+  background-color: var(--card); 
+  border-color: var(--border); 
+}
+
+/* Custom UI Elements */
+.active-tab {
+  background-color: var(--primaryDark);
+  color: #000;
+}
+.inactive-tab {
+  color: #6b7280;
+}
+.inactive-tab:hover {
+  background-color: rgba(107, 114, 128, 0.1);
+}
+
+.action-btn {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  background-color: rgba(107, 114, 128, 0.1);
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+.action-btn:hover {
+  background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* Range Slider Accent */
+input[type=range] {
+  accent-color: var(--primaryDark);
+}
+input[type=checkbox] {
+  accent-color: var(--primaryDark);
+}
+
+/* Toast Animation */
+.toast-show {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
