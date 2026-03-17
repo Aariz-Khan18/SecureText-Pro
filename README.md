@@ -26,8 +26,8 @@ A premium web-based toolkit for secure text operations, password generation, and
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="dark.png" width="400"/>
-  <img src="light.png" width="400"/>
+  <img src="Dark.png" width="400"/>
+  <img src="Light.png" width="400"/>
 </p>
 
 ---
