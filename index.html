@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SecureText Toolkit</title>
+  <title>SecureText Toolkit | Pro</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -16,38 +16,15 @@
             foreground: 'var(--foreground)',
             card: 'var(--card)',
             border: 'var(--border)',
-            primary: '#3b82f6', // blue-500
+            primary: '#00ffcc', // Upgraded to neon accent
+            primaryDark: '#00ccaa'
           }
         }
       }
     }
   </script>
 
-  <style>
-    :root {
-      --background: #f8fafc;
-      --foreground: #0f172a;
-      --card: #ffffff;
-      --border: #e2e8f0;
-    }
-    .dark {
-      --background: #020817;
-      --foreground: #f8fafc;
-      --card: #0f172a;
-      --border: #1e293b;
-    }
-    body {
-      background-color: var(--background);
-      color: var(--foreground);
-      transition: background-color 0.2s, color 0.2s;
-    }
-    .card-bg { background-color: var(--card); border-color: var(--border); }
-    
-    /* Hide scrollbar for sidebar */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
-
+  <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="min-h-screen antialiased flex flex-col">
@@ -55,8 +32,8 @@
   <header class="border-b card-bg border sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-2 font-bold text-xl tracking-tight">
-        <i data-lucide="shield" class="text-primary"></i>
-        <span>SecureText Toolkit</span>
+        <i data-lucide="shield-check" style="color: var(--primary);"></i>
+        <span>SecureText <span style="color: var(--primary);">Toolkit</span></span>
       </div>
       <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
         <i data-lucide="moon" id="themeIcon"></i>
@@ -67,14 +44,14 @@
   <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8">
     
     <nav class="w-full md:w-64 flex flex-row md:flex-col gap-2 overflow-x-auto pb-4 md:pb-0 no-scrollbar">
-      <button onclick="switchTab('password')" id="tab-password" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all bg-primary text-white shadow-md whitespace-nowrap">
+      <button onclick="switchTab('password')" id="tab-password" class="tab-btn active-tab flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all shadow-md whitespace-nowrap">
         <i data-lucide="lock" class="w-5 h-5"></i> Password Gen
       </button>
-      <button onclick="switchTab('text')" id="tab-text" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800 whitespace-nowrap">
+      <button onclick="switchTab('text')" id="tab-text" class="tab-btn inactive-tab flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all whitespace-nowrap">
         <i data-lucide="type" class="w-5 h-5"></i> Text Utils
       </button>
-      <button onclick="switchTab('security')" id="tab-security" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800 whitespace-nowrap">
-        <i data-lucide="shield-check" class="w-5 h-5"></i> Security Tools
+      <button onclick="switchTab('security')" id="tab-security" class="tab-btn inactive-tab flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all whitespace-nowrap">
+        <i data-lucide="hash" class="w-5 h-5"></i> Security Tools
       </button>
     </nav>
 
@@ -83,55 +60,52 @@
       <div id="view-password" class="card-bg border rounded-xl p-6 shadow-sm">
         <h2 class="text-2xl font-bold mb-4">Password Generator</h2>
         
-        <div class="relative mb-6">
+        <div class="relative mb-2">
           <input type="text" id="pwdOutput" readonly class="w-full bg-gray-100 dark:bg-gray-800 text-xl font-mono p-4 rounded-lg outline-none pr-24" />
           <div class="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2">
             <button onclick="generatePassword()" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors"><i data-lucide="refresh-cw" class="w-5 h-5 text-gray-500"></i></button>
-            <button onclick="copyToClipboard('pwdOutput', this)" class="p-2 bg-primary text-white rounded-md transition-colors"><i data-lucide="copy" class="w-5 h-5"></i></button>
+            <button onclick="copyToClipboard('pwdOutput')" class="p-2 bg-[var(--primaryDark)] text-white rounded-md transition-colors"><i data-lucide="copy" class="w-5 h-5"></i></button>
           </div>
+        </div>
+        
+        <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-6 overflow-hidden">
+            <div id="strengthBar" class="h-full w-0 transition-all duration-300"></div>
         </div>
 
         <div class="space-y-4">
           <div>
             <div class="flex justify-between mb-2">
               <label class="text-sm font-medium">Length</label>
-              <span id="pwdLengthLabel" class="text-sm font-bold text-primary">16</span>
+              <span id="pwdLengthLabel" class="text-sm font-bold" style="color: var(--primaryDark);">16</span>
             </div>
-            <input type="range" id="pwdLength" min="4" max="64" value="16" class="w-full accent-primary" oninput="updateLengthLabel(this.value); generatePassword()" />
+            <input type="range" id="pwdLength" min="4" max="64" value="16" class="w-full" oninput="updateLengthLabel(this.value); generatePassword()" />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" id="chkUpper" checked onchange="generatePassword()" class="w-4 h-4 accent-primary"> <span class="text-sm">Uppercase (A-Z)</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" id="chkLower" checked onchange="generatePassword()" class="w-4 h-4 accent-primary"> <span class="text-sm">Lowercase (a-z)</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" id="chkNum" checked onchange="generatePassword()" class="w-4 h-4 accent-primary"> <span class="text-sm">Numbers (0-9)</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" id="chkSym" checked onchange="generatePassword()" class="w-4 h-4 accent-primary"> <span class="text-sm">Symbols (!@#$)</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer select-none sm:col-span-2">
-              <input type="checkbox" id="chkAmb" onchange="generatePassword()" class="w-4 h-4 accent-primary"> <span class="text-sm">Avoid Ambiguous (1, l, O, 0)</span>
-            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" id="chkUpper" checked onchange="generatePassword()" class="w-4 h-4"> <span class="text-sm">Uppercase (A-Z)</span></label>
+            <label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" id="chkLower" checked onchange="generatePassword()" class="w-4 h-4"> <span class="text-sm">Lowercase (a-z)</span></label>
+            <label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" id="chkNum" checked onchange="generatePassword()" class="w-4 h-4"> <span class="text-sm">Numbers (0-9)</span></label>
+            <label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" id="chkSym" checked onchange="generatePassword()" class="w-4 h-4"> <span class="text-sm">Symbols (!@#$)</span></label>
+            <label class="flex items-center gap-2 cursor-pointer select-none sm:col-span-2"><input type="checkbox" id="chkAmb" onchange="generatePassword()" class="w-4 h-4"> <span class="text-sm">Avoid Ambiguous (1, l, O, 0)</span></label>
           </div>
         </div>
       </div>
 
       <div id="view-text" class="card-bg border rounded-xl p-6 shadow-sm hidden">
-        <h2 class="text-2xl font-bold mb-4">Text Utilities</h2>
+        <h2 class="text-2xl font-bold mb-4">Text Utilities & Encoding</h2>
         
         <div class="flex flex-wrap gap-2 mb-4" id="textActions">
-          <button onclick="processText('upper')" class="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors">UPPERCASE</button>
-          <button onclick="processText('lower')" class="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors">lowercase</button>
-          <button onclick="processText('capitalize')" class="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors">Capitalize</button>
-          <button onclick="processText('spaces')" class="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors">Remove Spaces</button>
-          <button onclick="processText('reverse')" class="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors">Reverse</button>
+          <button onclick="processText('upper')" class="action-btn">UPPERCASE</button>
+          <button onclick="processText('lower')" class="action-btn">lowercase</button>
+          <button onclick="processText('capitalize')" class="action-btn">Capitalize</button>
+          <button onclick="processText('spaces')" class="action-btn">Remove Extra Spaces</button>
+          <div class="w-full h-px bg-gray-200 dark:bg-gray-700 my-1"></div> <button onclick="processText('base64enc')" class="action-btn text-blue-500">Base64 Encode</button>
+          <button onclick="processText('base64dec')" class="action-btn text-blue-500">Base64 Decode</button>
+          <button onclick="processText('urlenc')" class="action-btn text-purple-500">URL Encode</button>
+          <button onclick="processText('urldec')" class="action-btn text-purple-500">URL Decode</button>
         </div>
 
-        <textarea id="textInputArea" oninput="updateTextStats()" placeholder="Paste or type your text here..." class="w-full h-64 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 outline-none focus:ring-2 focus:ring-primary/50 resize-y"></textarea>
+        <textarea id="textInputArea" oninput="updateTextStats()" placeholder="Paste or type your text here..." class="w-full h-64 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 outline-none focus:ring-2 focus:ring-primary/50 resize-y font-mono text-sm"></textarea>
 
         <div class="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4">
           <div class="flex gap-4 text-sm text-gray-500 dark:text-gray-400">
@@ -139,19 +113,15 @@
             <span>Chars: <b id="charCount">0</b></span>
           </div>
           <div class="flex gap-2">
-            <button onclick="document.getElementById('textInputArea').value=''; updateTextStats()" class="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors">
-              <i data-lucide="trash-2" class="w-4 h-4"></i> Clear
-            </button>
-            <button onclick="copyToClipboard('textInputArea', this)" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md transition-colors">
-              <i data-lucide="copy" class="w-4 h-4"></i> Copy
-            </button>
+            <button onclick="document.getElementById('textInputArea').value=''; updateTextStats()" class="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i> Clear</button>
+            <button onclick="copyToClipboard('textInputArea')" class="flex items-center gap-2 px-4 py-2 bg-[var(--primaryDark)] text-white rounded-md transition-colors"><i data-lucide="copy" class="w-4 h-4"></i> Copy</button>
           </div>
         </div>
       </div>
 
       <div id="view-security" class="card-bg border rounded-xl p-6 shadow-sm hidden">
         <h2 class="text-2xl font-bold mb-4">Hash Generator</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Generate cryptographic hashes instantly in your browser. No data leaves your device.</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Generate cryptographic hashes locally in your browser.</p>
         
         <textarea id="hashInput" oninput="debounceGenerateHashes()" placeholder="Enter text to hash..." class="w-full h-32 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6 outline-none focus:ring-2 focus:ring-primary/50"></textarea>
 
@@ -160,21 +130,14 @@
             <label class="text-sm font-semibold uppercase">SHA-256</label>
             <div class="flex gap-2">
               <input type="text" id="out-sha256" readonly class="flex-1 bg-gray-100 dark:bg-gray-800 font-mono text-sm p-2 rounded-md outline-none" />
-              <button onclick="copyToClipboard('out-sha256', this)" class="p-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"><i data-lucide="copy" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-          <div class="space-y-1">
-            <label class="text-sm font-semibold uppercase">SHA-384</label>
-            <div class="flex gap-2">
-              <input type="text" id="out-sha384" readonly class="flex-1 bg-gray-100 dark:bg-gray-800 font-mono text-sm p-2 rounded-md outline-none" />
-              <button onclick="copyToClipboard('out-sha384', this)" class="p-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"><i data-lucide="copy" class="w-4 h-4"></i></button>
+              <button onclick="copyToClipboard('out-sha256')" class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md"><i data-lucide="copy" class="w-4 h-4"></i></button>
             </div>
           </div>
           <div class="space-y-1">
             <label class="text-sm font-semibold uppercase">SHA-512</label>
             <div class="flex gap-2">
               <input type="text" id="out-sha512" readonly class="flex-1 bg-gray-100 dark:bg-gray-800 font-mono text-sm p-2 rounded-md outline-none" />
-              <button onclick="copyToClipboard('out-sha512', this)" class="p-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"><i data-lucide="copy" class="w-4 h-4"></i></button>
+              <button onclick="copyToClipboard('out-sha512')" class="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md"><i data-lucide="copy" class="w-4 h-4"></i></button>
             </div>
           </div>
         </div>
@@ -183,168 +146,17 @@
     </section>
   </main>
 
+  <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-[var(--primaryDark)] text-black font-bold px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 pointer-events-none z-50">
+      <i data-lucide="check-circle" class="w-5 h-5"></i>
+      <span id="toastMsg">Copied!</span>
+  </div>
+
   <footer class="mt-auto py-6 border-t card-bg border transition-colors">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center text-center">
-      <p class="text-sm text-gray-500 dark:text-gray-400">
-        Designed and Developed by <span class="font-bold text-primary tracking-wide">Aariz Khan</span>
-      </p>
-      <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-        All processing happens locally in your browser.
-      </p>
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Developed by <span class="font-bold tracking-wide" style="color: var(--primaryDark);">Aariz Khan</span></p>
     </div>
   </footer>
 
-  <script>
-    // Initialize Icons
-    lucide.createIcons();
-
-    // --- THEME LOGIC ---
-    const themeToggle = document.getElementById('themeToggle');
-    const htmlEl = document.documentElement;
-    let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    function applyTheme() {
-      if (isDark) {
-        htmlEl.classList.add('dark');
-        document.getElementById('themeIcon').setAttribute('data-lucide', 'sun');
-      } else {
-        htmlEl.classList.remove('dark');
-        document.getElementById('themeIcon').setAttribute('data-lucide', 'moon');
-      }
-      lucide.createIcons();
-    }
-    
-    themeToggle.addEventListener('click', () => {
-      isDark = !isDark;
-      applyTheme();
-    });
-    applyTheme();
-
-    // --- TAB LOGIC ---
-    function switchTab(tabId) {
-      // Hide all views
-      ['password', 'text', 'security'].forEach(id => {
-        document.getElementById(`view-${id}`).classList.add('hidden');
-        const btn = document.getElementById(`tab-${id}`);
-        btn.className = 'tab-btn flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800 whitespace-nowrap';
-      });
-
-      // Show active view
-      document.getElementById(`view-${tabId}`).classList.remove('hidden');
-      const activeBtn = document.getElementById(`tab-${tabId}`);
-      activeBtn.className = 'tab-btn flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all bg-primary text-white shadow-md whitespace-nowrap';
-    }
-
-    // --- UTILITY: COPY TO CLIPBOARD ---
-    function copyToClipboard(inputId, btnEl) {
-      const input = document.getElementById(inputId);
-      if (!input.value) return;
-      
-      navigator.clipboard.writeText(input.value).then(() => {
-        const iconEl = btnEl.querySelector('i');
-        iconEl.setAttribute('data-lucide', 'check');
-        lucide.createIcons();
-        setTimeout(() => {
-          iconEl.setAttribute('data-lucide', 'copy');
-          lucide.createIcons();
-        }, 2000);
-      });
-    }
-
-    // --- 1. PASSWORD GENERATOR LOGIC ---
-    function updateLengthLabel(val) {
-      document.getElementById('pwdLengthLabel').innerText = val;
-    }
-
-    function generatePassword() {
-      const length = document.getElementById('pwdLength').value;
-      const upper = document.getElementById('chkUpper').checked;
-      const lower = document.getElementById('chkLower').checked;
-      const num = document.getElementById('chkNum').checked;
-      const sym = document.getElementById('chkSym').checked;
-      const amb = document.getElementById('chkAmb').checked;
-
-      let charset = '';
-      if (upper) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      if (lower) charset += 'abcdefghijklmnopqrstuvwxyz';
-      if (num) charset += '0123456789';
-      if (sym) charset += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
-      
-      if (amb) charset = charset.replace(/[il1Lo0O]/g, '');
-
-      const output = document.getElementById('pwdOutput');
-      if (!charset) {
-        output.value = 'Select at least one option';
-        return;
-      }
-
-      let newPassword = '';
-      const randomValues = new Uint32Array(length);
-      window.crypto.getRandomValues(randomValues);
-      
-      for (let i = 0; i < length; i++) {
-        newPassword += charset[randomValues[i] % charset.length];
-      }
-      
-      output.value = newPassword;
-    }
-    // Generate on first load
-    generatePassword();
-
-
-    // --- 2. TEXT UTILITIES LOGIC ---
-    function updateTextStats() {
-      const text = document.getElementById('textInputArea').value;
-      const chars = text.length;
-      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-      document.getElementById('charCount').innerText = chars;
-      document.getElementById('wordCount').innerText = words;
-    }
-
-    function processText(action) {
-      const textArea = document.getElementById('textInputArea');
-      let text = textArea.value;
-      
-      if (action === 'upper') text = text.toUpperCase();
-      if (action === 'lower') text = text.toLowerCase();
-      if (action === 'capitalize') text = text.replace(/\b\w/g, c => c.toUpperCase());
-      if (action === 'spaces') text = text.replace(/\s+/g, ' ').trim();
-      if (action === 'reverse') text = text.split('').reverse().join('');
-      
-      textArea.value = text;
-      updateTextStats();
-    }
-
-
-    // --- 3. SECURITY TOOLS (HASH) LOGIC ---
-    let hashTimeout;
-    
-    async function createHash(message, algo) {
-      const msgUint8 = new TextEncoder().encode(message);
-      const hashBuffer = await crypto.subtle.digest(algo, msgUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    async function executeHashing() {
-      const input = document.getElementById('hashInput').value;
-      if (!input) {
-        document.getElementById('out-sha256').value = '';
-        document.getElementById('out-sha384').value = '';
-        document.getElementById('out-sha512').value = '';
-        return;
-      }
-      
-      document.getElementById('out-sha256').value = await createHash(input, 'SHA-256');
-      document.getElementById('out-sha384').value = await createHash(input, 'SHA-384');
-      document.getElementById('out-sha512').value = await createHash(input, 'SHA-512');
-    }
-
-    function debounceGenerateHashes() {
-      clearTimeout(hashTimeout);
-      hashTimeout = setTimeout(executeHashing, 300);
-    }
-
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
