@@ -66,3 +66,15 @@ input[type=checkbox] {
 /* Scrollbar */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* --- SECRET EASTER EGG LINK --- */
+.secret-link {
+  color: var(--primaryDark);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.secret-link:hover {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary);
+  cursor: pointer;
+}
