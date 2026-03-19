@@ -17,7 +17,10 @@ function applyTheme() {
   lucide.createIcons();
 }
 
-themeToggle.addEventListener('click', () => { isDark = !isDark; applyTheme(); });
+themeToggle.addEventListener('click', () => { 
+  isDark = !isDark; 
+  applyTheme(); 
+});
 applyTheme();
 
 // --- TAB LOGIC ---
@@ -60,9 +63,18 @@ function calculateStrength(pwd) {
   if(/[^A-Za-z0-9]/.test(pwd)) score += 1;
 
   const bar = document.getElementById('strengthBar');
-  if(score <= 2) { bar.style.width = '33%'; bar.className = 'h-full transition-all duration-300 bg-red-500'; }
-  else if(score <= 4) { bar.style.width = '66%'; bar.className = 'h-full transition-all duration-300 bg-yellow-500'; }
-  else { bar.style.width = '100%'; bar.className = 'h-full transition-all duration-300 bg-green-500'; }
+  if(score <= 2) { 
+    bar.style.width = '33%'; 
+    bar.className = 'h-full transition-all duration-300 bg-red-500'; 
+  }
+  else if(score <= 4) { 
+    bar.style.width = '66%'; 
+    bar.className = 'h-full transition-all duration-300 bg-yellow-500'; 
+  }
+  else { 
+    bar.style.width = '100%'; 
+    bar.className = 'h-full transition-all duration-300 bg-green-500'; 
+  }
 }
 
 function generatePassword() {
@@ -150,4 +162,3 @@ function debounceGenerateHashes() {
   clearTimeout(hashTimeout);
   hashTimeout = setTimeout(executeHashing, 300);
 }
-
